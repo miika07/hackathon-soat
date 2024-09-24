@@ -35,9 +35,9 @@ export default class MedicoManagerUseCase {
 
         const usuarioDB: UsuarioEntity = parserUsuarioDB(email, senhaCripto, PerfilEnum.MEDICO);
 
-        const novoUsuario = await this.adapter.criarUsuario(usuarioDB);
+        const novoUsuario = await this.userAdapter.criarUsuario(usuarioDB);
 
-        const medicoDB: MedicoEntity = parserMedicosDB(nome, cpf, crm, novoUsuario.id);
+        const medicoDB: MedicoEntity = parserMedicosDB(nome, cpf, crm, novoUsuario);
 
         const response = await this.adapter.criarMedico(medicoDB);
 

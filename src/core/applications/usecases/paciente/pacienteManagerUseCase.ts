@@ -34,7 +34,7 @@ export default class PacienteManagerUseCase {
 
         const usuarioDB: UsuarioEntity = parserUsuarioDB(email, senhaCripto, PerfilEnum.PACIENTE);
 
-        const novoUsuario = await this.adapter.criarUsuario(usuarioDB);
+        const novoUsuario = await this.userAdapter.criarUsuario(usuarioDB);
 
         const pacienteDB: PacienteEntity = parserPacientesDB(nome, cpf, novoUsuario.id);
 

@@ -6,6 +6,7 @@ export class Medico {
     cpf: string;
     crm: string;
     usuarioId: string;
+    email: string;
     agendas?: AgendaMedico[];
 
     constructor(nome: string, cpf: string, crm: string, usuarioId: string, agendas: AgendaMedico[] = []) {

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Index, OneToOne, JoinColumn, On
 import { v4 as uuidv4 } from 'uuid';
 import { UsuarioEntity } from './usuario';
 import { AgendaMedicoEntity } from './agendaMedico';
+import { Usuario } from '../../applications/models/usuario';
 
 @Entity({ name: 'medicos' })
 @Index('idx_medico_id', ['id'], { unique: true })
@@ -21,12 +22,12 @@ export class MedicoEntity {
 
     @OneToOne(() => UsuarioEntity, usuario => usuario.id, { eager: true })
     @JoinColumn({ name: 'idUsuario' })
-    usuario: string;
+    usuario: UsuarioEntity;
 
     @OneToMany(() => AgendaMedicoEntity, agenda => agenda.medico, { cascade: true })
     agendas: AgendaMedicoEntity[];
 
-    constructor(nome: string = '', cpf: string = '', crm: string = '', usuario: string = '') {
+    constructor(nome: string = '', cpf: string = '', crm: string = '', usuario: UsuarioEntity) {
         this.id = uuidv4();
         this.nome = nome;
         this.cpf = cpf;

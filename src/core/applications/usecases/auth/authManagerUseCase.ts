@@ -15,19 +15,24 @@ export default class AuthManagerUseCase {
 
     async login(email: string, senha: string): Promise<{ token: string } | null> {
 
-        const usuario: UsuarioEntity = await this.userAdapter.buscarUsuarioPorEmail(email);
-        if (!usuario) {
-            throw new Error('Usuário inválido.');
+        try{
+            const usuario: UsuarioEntity = await this.userAdapter.buscarUsuarioPorEmail(email);
+            if (!usuario) {
+                throw new Error('Usuário inválido.');
+            }
+    
+            const match = await bcrypt.compare(senha, usuario.senha);
+            if (!match) {
+                throw new Error('Usuário inválido.');
+            }
+    
+            const payload = { id: usuario.id, email: usuario.email, perfil: usuario.perfil };
+            const token = jwt.sign(payload, this.jwtSecret, { expiresIn: '4h' });
+    
+            return { token };
+        }catch{
+            throw new Error("Credenciais inválidas");
         }
-
-        const match = await bcrypt.compare(senha, usuario.senha);
-        if (!match) {
-            throw new Error('Usuário inválido.');
-        }
-
-        const payload = { id: usuario.id, email: usuario.email, perfil: usuario.perfil };
-        const token = jwt.sign(payload, this.jwtSecret, { expiresIn: '4h' });
-
-        return { token };
+        
     }
 }
