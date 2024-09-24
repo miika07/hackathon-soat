@@ -1,108 +1,108 @@
 import * as Hapi from '@hapi/hapi';
 import Logger from '../../../plugins/logger.plugin';
 import { ok } from 'assert';
-import MedicoRepositoryAdapter from '../../adapter/medico/medicoRepositoryAdapter';
-import { MedicoEntity } from '../../../core/domain/entities/medico';
+import PacienteRepositoryAdapter from '../../adapter/paciente/pacienteRepositoryAdapter';
+import { PacienteEntity } from '../../../core/domain/entities/paciente';
 import { AppDataSource } from '../../data/database/data-source';
 import { AppDataSourceTest } from '../../data/database/data-source-teste';
-import MedicoManagerUseCase from '../../../core/applications/usecases/medico/medicoManagerUseCase';
+import PacienteManagerUseCase from '../../../core/applications/usecases/paciente/pacienteManagerUseCase';
 import UsuarioRepositoryAdapter from '../../adapter/usuario/usuarioRepositoryAdapter';
 import { UsuarioEntity } from '../../../core/domain/entities/usuario';
 
-export default class MedicoController {
+export default class PacienteController {
     
-    private medicoRepository = process.env.NODE_ENV == 'test'
-            ? AppDataSourceTest.getRepository(MedicoEntity)
-            : AppDataSource.getRepository(MedicoEntity);
+    private pacienteRepository = process.env.NODE_ENV == 'test'
+            ? AppDataSourceTest.getRepository(PacienteEntity)
+            : AppDataSource.getRepository(PacienteEntity);
 
     private usuarioRepository = process.env.NODE_ENV == 'test'
             ? AppDataSourceTest.getRepository(UsuarioEntity)
             : AppDataSource.getRepository(UsuarioEntity);
 
-    private adapter: MedicoRepositoryAdapter = new MedicoRepositoryAdapter(this.medicoRepository);
+    private adapter: PacienteRepositoryAdapter = new PacienteRepositoryAdapter(this.pacienteRepository);
     private userAdapter: UsuarioRepositoryAdapter = new UsuarioRepositoryAdapter(this.usuarioRepository);
-    private readonly medicoManagerUseCase: MedicoManagerUseCase = new MedicoManagerUseCase(this.adapter, this.userAdapter);
+    private readonly pacienteManagerUseCase: PacienteManagerUseCase = new PacienteManagerUseCase(this.adapter, this.userAdapter);
     
 
-    public buscarTodosMedicos = async (
+    public buscarTodosPacientes = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
-            const data = await this.medicoManagerUseCase.buscarTodosMedicos()
+            const data = await this.pacienteManagerUseCase.buscarTodosPacientes()
             return h.response(data);
         } catch (error) {
-            Logger.error(`Error in GET /medicos: ${error.message}`);
+            Logger.error(`Error in GET /pacientes: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
 
-    public buscarMedicoPorID = async (
+    public buscarPacientePorID = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
-            const data = await this.medicoManagerUseCase.buscarMedicoPorId(request.params.id)
+            const data = await this.pacienteManagerUseCase.buscarPacientePorId(request.params.id)
             if (data){
               return h.response(data).code(200);
             }
             return h.response({ error: 'Not found'}).code(404);
         } catch (error) {
-            Logger.error(`Error in GET /medico/{id}: ${error.message}`);
+            Logger.error(`Error in GET /paciente/{id}: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
 
-    public buscarMedicoPorCPF = async (
+    public buscarPacientePorCPF = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
-            const data = await this.medicoManagerUseCase.buscarMedicoPorCPF(request.params.cpf)
+            const data = await this.pacienteManagerUseCase.buscarPacientePorCPF(request.params.cpf)
             if (data){
               return h.response(data).code(200);
             }
             return h.response({ error: 'Not found'}).code(404);
         } catch (error) {
-            Logger.error(`Error in GET /medico/{cpf}: ${error.message}`);
+            Logger.error(`Error in GET /paciente/{cpf}: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
 
-    public adicionarMedico = async (
+    public adicionarPaciente = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
             const body = request.payload as { nome: string, email: string, cpf: string, crm: string, senha: string};
-            const data = await this.medicoManagerUseCase.criarMedico(body.nome, body.email, body.cpf, body.crm, body.senha);
+            const data = await this.pacienteManagerUseCase.criarPaciente(body.nome, body.email, body.cpf, body.crm, body.senha);
             if (data) {
               return h.response(data);
             }
-            return h.response({error: 'Medico já existe'}).code(400)
+            return h.response({error: 'Paciente já existe'}).code(400)
         } catch (error) {
-            Logger.error(`Error in POST /medicos: ${error.message}`);
+            Logger.error(`Error in POST /pacientes: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
 
-    public deletarMedico = async (
+    public deletarPaciente = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
-            await this.medicoManagerUseCase.deletarMedico(request.params.id)
+            await this.pacienteManagerUseCase.deletarPaciente(request.params.id)
             return h.response(ok)
         } catch (error) {
-            Logger.error(`Error in DELETE /medico: ${error.message}`);
+            Logger.error(`Error in DELETE /paciente: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
 
-    public atualizarMedico = async (
+    public atualizarPaciente = async (
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
             const body = request.payload as { nome: string, email: string, cpf: string };
-            const data = await this.medicoManagerUseCase.atualizarMedico(body.cpf, body.nome, body.email)
+            const data = await this.pacienteManagerUseCase.atualizarPaciente(body.cpf, body.nome, body.email)
             return h.response(data)
         } catch (error) {
-            Logger.error(`Error in PUT /medico: ${error.message}`);
+            Logger.error(`Error in PUT /paciente: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)
         }
     }
