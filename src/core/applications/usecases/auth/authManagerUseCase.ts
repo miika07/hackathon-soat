@@ -26,7 +26,7 @@ export default class AuthManagerUseCase {
                 throw new Error('Usuário inválido.');
             }
     
-            const payload = { id: usuario.id, email: usuario.email, perfil: usuario.perfil };
+            const payload = { id: usuario.id, email: usuario.email, perfil: usuario.perfil, scope: usuario.perfil};
             const token = jwt.sign(payload, this.jwtSecret, { expiresIn: '4h' });
     
             return { token };

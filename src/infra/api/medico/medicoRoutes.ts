@@ -3,6 +3,7 @@ import MedicoController from './medicoController'
 import Logger from '../../../plugins/logger.plugin'
 import IRoute from '../../../helper/route'
 import validate from './validate'
+import { PerfilEnum } from '../../../core/applications/models/usuario'
 
 export default class MedicoRoutes implements IRoute {
   public async register (server: Hapi.Server): Promise<any> {
@@ -20,8 +21,10 @@ export default class MedicoRoutes implements IRoute {
             description: 'Busca todos os medicos',
             tags: ['api', 'medicos'],
             auth: {
-              mode: "optional"
-            }
+              strategy: 'jwt',
+              scope: [PerfilEnum.PACIENTE]
+          }
+
           }
         },
         {
