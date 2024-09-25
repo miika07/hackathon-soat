@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { MedicoEntity } from "../../../core/domain/entities/medico";
 import { MedicoRepositoryInterface } from "../../../core/applications/ports/medicoRepository";
+import { UsuarioEntity } from "../../../core/domain/entities/usuario";
 
 export default class MedicoRepositoryAdapter implements MedicoRepositoryInterface {
 
@@ -28,6 +29,10 @@ export default class MedicoRepositoryAdapter implements MedicoRepositoryInterfac
 
     async buscarMedicoPorCRM(crm: string): Promise<MedicoEntity | undefined> {
         return await this.medicoRepository.findOne({ where: { crm: crm } });
+    }
+
+    async buscarMedicoPoUsuarioId(usuario: UsuarioEntity): Promise<MedicoEntity | undefined> {
+        return await this.medicoRepository.findOne({ where: { usuario: usuario } });
     }
 
     async atualizarMedico(medico: MedicoEntity): Promise<MedicoEntity> {

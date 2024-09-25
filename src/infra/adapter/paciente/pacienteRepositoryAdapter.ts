@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { PacienteEntity } from "../../../core/domain/entities/paciente";
 import { PacienteRepositoryInterface } from "../../../core/applications/ports/pacienteRepository";
+import { UsuarioEntity } from "../../../core/domain/entities/usuario";
 
 export default class PacienteRepositoryAdapter implements PacienteRepositoryInterface {
 
@@ -24,6 +25,10 @@ export default class PacienteRepositoryAdapter implements PacienteRepositoryInte
 
     async buscarPacientePorCPF(cpf: string): Promise<PacienteEntity | undefined> {
         return await this.pacienteRepository.findOne({ where: { cpf: cpf } });
+    }
+
+    async buscarPacientePoUsuarioId(usuario: UsuarioEntity): Promise<PacienteEntity | undefined> {
+        return await this.pacienteRepository.findOne({ where: { usuario: usuario } });
     }
 
     async atualizarPaciente(paciente: PacienteEntity): Promise<PacienteEntity> {

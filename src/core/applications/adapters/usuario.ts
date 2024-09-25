@@ -30,3 +30,4 @@ export const parserUsuarioDB = (email: string, senha: string, perfil: PerfilEnum
     const usuario = new UsuarioEntity(email, senha, perfil);
     return usuario;
 }
+

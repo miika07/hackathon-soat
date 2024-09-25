@@ -1,4 +1,5 @@
 import { PacienteEntity } from "../../domain/entities/paciente";
+import { UsuarioEntity } from "../../domain/entities/usuario";
 import { Paciente } from "../models/paciente";
 
 
@@ -7,7 +8,7 @@ export const parserPaciente = (pacienteDB: PacienteEntity) : Paciente => {
         ...pacienteDB.id && { id: pacienteDB.id },
         nome: pacienteDB.nome,
         cpf: pacienteDB.cpf,
-        usuarioId: pacienteDB.usuario
+        usuarioId: pacienteDB.usuario.id
     }
 }
 
@@ -19,14 +20,14 @@ export const parserPacientes = (pacienteDB: PacienteEntity[]) : Paciente[] => {
                 ...paciente.id && { id: paciente.id },
                 nome: paciente.nome,
                 cpf: paciente.cpf,
-                usuarioId: paciente.usuario
+                usuarioId: paciente.usuario.id
             }) 
         });
     } 
     return pacientes;
 }
 
-export const parserPacientesDB = (nome: string, cpf: string, usuarioId: string): PacienteEntity => {
-    const paciente = new PacienteEntity(nome, cpf, usuarioId);
+export const parserPacientesDB = (nome: string, cpf: string, usuario: UsuarioEntity): PacienteEntity => {
+    const paciente = new PacienteEntity(nome, cpf, usuario);
     return paciente;
 }

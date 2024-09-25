@@ -18,12 +18,12 @@ export class PacienteEntity {
 
     @OneToOne(() => UsuarioEntity, usuario => usuario.id, { eager: true })
     @JoinColumn({ name: 'idUsuario' })
-    usuario: string;
+    usuario: UsuarioEntity;
 
     @OneToMany(() => AgendaMedicoEntity, agenda => agenda.paciente, { cascade: true })
     agendas: AgendaMedicoEntity[];
 
-    constructor(nome: string = '', cpf: string = '', usuario: string = '') {
+    constructor(nome: string = '', cpf: string = '', usuario: UsuarioEntity) {
         this.id = uuidv4();
         this.nome = nome;
         this.cpf = cpf;

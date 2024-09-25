@@ -9,6 +9,8 @@ import MedicoManagerUseCase from '../../../core/applications/usecases/medico/med
 import UsuarioRepositoryAdapter from '../../adapter/usuario/usuarioRepositoryAdapter';
 import { UsuarioEntity } from '../../../core/domain/entities/usuario';
 import AuthManagerUseCase from '../../../core/applications/usecases/auth/authManagerUseCase';
+import { PacienteEntity } from '../../../core/domain/entities/paciente';
+import PacienteRepositoryAdapter from '../../adapter/paciente/pacienteRepositoryAdapter';
 
 export default class MedicoController {
 
@@ -16,8 +18,18 @@ export default class MedicoController {
         ? AppDataSourceTest.getRepository(UsuarioEntity)
         : AppDataSource.getRepository(UsuarioEntity);
 
+    private pacienteRepository = process.env.NODE_ENV == 'test'
+        ? AppDataSourceTest.getRepository(PacienteEntity)
+        : AppDataSource.getRepository(PacienteEntity);
+
+    private medicoRepository = process.env.NODE_ENV == 'test'
+        ? AppDataSourceTest.getRepository(MedicoEntity)
+        : AppDataSource.getRepository(MedicoEntity);
+
     private userAdapter: UsuarioRepositoryAdapter = new UsuarioRepositoryAdapter(this.usuarioRepository);
-    private readonly authManagerUseCase: AuthManagerUseCase = new AuthManagerUseCase(this.userAdapter);
+    private pacienteAdapter: PacienteRepositoryAdapter = new PacienteRepositoryAdapter(this.pacienteRepository);
+    private medicoAdapter: MedicoRepositoryAdapter = new MedicoRepositoryAdapter(this.medicoRepository);
+    private readonly authManagerUseCase: AuthManagerUseCase = new AuthManagerUseCase(this.userAdapter, this.pacienteAdapter, this.medicoAdapter);
 
 
     public login = async (
