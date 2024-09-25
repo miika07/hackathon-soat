@@ -8,4 +8,5 @@ export interface AgendaMedicoRepositoryInterface {
     buscarAgendaPorDataHoraIdMedico(data: string, horario: string, idMedico: string): Promise<AgendaMedicoEntity | undefined>; 
     atualizarAgendaMedico(agendamedico: AgendaMedicoEntity): Promise<AgendaMedicoEntity>;
     deletarAgendaMedico(id: string): Promise<boolean>;
+    buscarAgendasDeUmMedico(id: string): Promise<AgendaMedicoEntity[] | undefined>;
 }

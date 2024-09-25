@@ -15,6 +15,8 @@ export default class AuthManagerUseCase {
 
     constructor(userAdapter: UsuarioRepositoryAdapter, pacienteAdapter: PacienteRepositoryAdapter, medicoAdapter: MedicoRepositoryAdapter) {
         this.userAdapter = userAdapter;
+        this.pacienteAdapter = pacienteAdapter;
+        this.medicoAdapter = medicoAdapter;
         this.jwtSecret = "stubJWT";
     }
 
@@ -50,7 +52,7 @@ export default class AuthManagerUseCase {
         }
     }
 
-    async decryptToken(token: string) {
+    async decryptToken(token: string) : Promise<any> {
         const decoded = jwt.verify(token, this.jwtSecret);
         return decoded;
     }
