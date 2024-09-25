@@ -15,12 +15,12 @@ export default class MedicoRoutes implements IRoute {
       server.route([
         {
           method: 'GET',
-          path: '/api/agenda/{medicoId}',
+          path: '/agenda/{medicoId}',
           options: {
             handler: controller.buscarAgendasDeUmMedico,
             validate: validate.getById,
             description: 'Retorna os horários disponíveis de um médico',
-            tags: ['api','agenda'],
+            tags: ['api', 'agenda'],
             auth: {
               strategy: 'jwt',
               scope: [PerfilEnum.PACIENTE, PerfilEnum.MEDICO]
@@ -29,12 +29,12 @@ export default class MedicoRoutes implements IRoute {
         },
         {
           method: 'POST',
-          path: '/api/agenda',
+          path: '/agenda',
           options: {
             handler: controller.medicoAdicionaAgenda,
             validate: validate.postAgenda,
             description: 'Adiciona um horário na agenda',
-            tags: ['api','agenda'],
+            tags: ['api', 'agenda'],
             auth: {
               strategy: 'jwt',
               scope: [PerfilEnum.MEDICO]
@@ -43,12 +43,12 @@ export default class MedicoRoutes implements IRoute {
         },
         {
           method: 'PATCH',
-          path: '/api/agenda',
+          path: '/agenda',
           options: {
             handler: controller.medicoAtualizaAgenda,
             validate: validate.patchAgenda,
             description: 'Um médico atualiza um horário de sua agenda',
-            tags: ['api','agenda'],
+            tags: ['api', 'agenda'],
             auth: {
               strategy: 'jwt',
               scope: [PerfilEnum.MEDICO]
@@ -57,12 +57,12 @@ export default class MedicoRoutes implements IRoute {
         },
         {
           method: 'POST',
-          path: '/api/agenda/consulta',
+          path: '/agenda/consulta',
           options: {
             handler: controller.pacienteAgendaConsulta,
             validate: validate.agendaPostConsulta,
             description: 'Um paciente agenda uma consulta',
-            tags: ['api','agenda'],
+            tags: ['api', 'agenda'],
             auth: {
               strategy: 'jwt',
               scope: [PerfilEnum.PACIENTE]

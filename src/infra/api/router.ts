@@ -6,7 +6,7 @@ import Auth from './auth/authRoutes';
 import Agenda from './agenda/agendaRoutes';
 
 export default class Router {
-  public static async loadRoutes (server: Hapi.Server): Promise<any> {
+  public static async loadRoutes(server: Hapi.Server): Promise<any> {
     Logger.info('Router - Start adding routes')
 
     await new Medicos().register(server);

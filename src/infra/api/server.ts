@@ -8,6 +8,7 @@ import { AppDataSource } from '../data/database/data-source'
 import { plugin } from 'hapi-alive';
 import { PerfilEnum } from '../../core/applications/models/usuario'
 
+
 const validate = async function (decoded, request, h) {
   console.log(decoded);
   console.log([PerfilEnum.PACIENTE, PerfilEnum.MEDICO].includes(decoded.perfil));
@@ -47,8 +48,8 @@ const server = new Hapi.Server({
       options: {
         healthCheck: () => {
           return { status: 'OK' };
-        },
-      },
+        }
+      }
     });
     await SwaggerPlugin.registerAll(server)
     await Router.loadRoutes(server)

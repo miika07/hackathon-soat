@@ -14,7 +14,7 @@ export default class PacienteRoutes implements IRoute {
       server.route([
         {
           method: 'GET',
-          path: '/api/pacientes',
+          path: '/paciente/all',
           options: {
             handler: controller.buscarTodosPacientes,
             description: 'Busca todos os pacientes',
@@ -26,7 +26,7 @@ export default class PacienteRoutes implements IRoute {
         },
         {
           method: 'GET',
-          path: '/api/paciente/{id}',
+          path: '/paciente/{id}',
           options: {
             handler: controller.buscarPacientePorID,
             validate: validate.getById,
@@ -39,7 +39,7 @@ export default class PacienteRoutes implements IRoute {
         },
         {
           method: 'GET',
-          path: '/api/paciente-cpf/{cpf}',
+          path: '/paciente/cpf/{cpf}',
           options: {
             handler: controller.buscarPacientePorCPF,
             validate: validate.getByCPF,
@@ -52,7 +52,7 @@ export default class PacienteRoutes implements IRoute {
         },
         {
             method: 'POST',
-            path: '/api/paciente',
+            path: '/paciente',
             options: {
               handler: controller.adicionarPaciente,
               validate: validate.postPaciente,
@@ -65,7 +65,7 @@ export default class PacienteRoutes implements IRoute {
         },
         {
             method: 'DELETE',
-            path: '/api/paciente/{id}',
+            path: '/paciente/{id}',
             options: {
               handler: controller.deletarPaciente,
               validate: validate.getById,
@@ -78,7 +78,7 @@ export default class PacienteRoutes implements IRoute {
         },
         {
             method: 'PUT',
-            path: '/api/paciente',
+            path: '/paciente',
             options: {
               handler: controller.atualizarPaciente,
               validate: validate.updatePaciente,

@@ -15,7 +15,7 @@ export default class MedicoRoutes implements IRoute {
       server.route([
         {
           method: 'GET',
-          path: '/api/medicos',
+          path: '/medico/all',
           options: {
             handler: controller.buscarTodosMedicos,
             description: 'Busca todos os medicos',
@@ -29,7 +29,7 @@ export default class MedicoRoutes implements IRoute {
         },
         {
           method: 'GET',
-          path: '/api/medico/{id}',
+          path: '/medico/{id}',
           options: {
             handler: controller.buscarMedicoPorID,
             validate: validate.getById,
@@ -42,7 +42,7 @@ export default class MedicoRoutes implements IRoute {
         },
         {
           method: 'GET',
-          path: '/api/medico-cpf/{cpf}',
+          path: '/medico/cpf/{cpf}',
           options: {
             handler: controller.buscarMedicoPorCPF,
             validate: validate.getByCPF,
@@ -55,7 +55,7 @@ export default class MedicoRoutes implements IRoute {
         },
         {
             method: 'POST',
-            path: '/api/medico',
+            path: '/medico',
             options: {
               handler: controller.adicionarMedico,
               validate: validate.postMedico,
@@ -68,7 +68,7 @@ export default class MedicoRoutes implements IRoute {
         },
         {
             method: 'DELETE',
-            path: '/api/medico/{id}',
+            path: '/medico/{id}',
             options: {
               handler: controller.deletarMedico,
               validate: validate.getById,
@@ -81,7 +81,7 @@ export default class MedicoRoutes implements IRoute {
         },
         {
             method: 'PUT',
-            path: '/api/medico',
+            path: '/medico',
             options: {
               handler: controller.atualizarMedico,
               validate: validate.updateMedico,

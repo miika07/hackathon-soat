@@ -18,8 +18,8 @@ export default class MedicoRoutes implements IRoute {
           options: {
             handler: controller.login,
             validate: validate.postLogin,
-            description: 'Adiciona um medico',
-            tags: ['api', 'medicos'],
+            description: 'Rota de login',
+            tags: ['api', 'login'],
             auth: {
               mode: "optional"
             }
