@@ -8,7 +8,8 @@ export const parserPaciente = (pacienteDB: PacienteEntity) : Paciente => {
         ...pacienteDB.id && { id: pacienteDB.id },
         nome: pacienteDB.nome,
         cpf: pacienteDB.cpf,
-        usuarioId: pacienteDB.usuario.id
+        usuarioId: pacienteDB.usuario.id,
+        email: pacienteDB.usuario.email
     }
 }
 

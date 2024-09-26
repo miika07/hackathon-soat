@@ -6,9 +6,14 @@ export default {
       medicoId: Joi.string().required()
     })
   },
+  getByIdPaciente: {
+    params: Joi.object().keys({
+      pacienteId: Joi.string().required()
+    })
+  },
   postAgenda: {
     payload: Joi.object({
-      pacienteId: Joi.string(),
+      pacienteId: Joi.string().optional(),
       data: Joi.string().pattern(/^\d{2}\/\d{2}\/\d{4}$/).required(),
       horario: Joi.string().pattern(/^\d{2}:\d{2}$/).required()
     })
@@ -23,8 +28,7 @@ export default {
   },
   agendaPostConsulta: {
     payload: Joi.object({
-      agendaId: Joi.string().required(),
-      pacienteId: Joi.string().required()
+      agendaId: Joi.string().required()
     })
   }
 

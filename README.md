@@ -4,7 +4,7 @@
 ### Cria um paciente
 
 ```http
-  POST /api/paciente
+  POST /paciente
 ```
 
 |  Body  | Tipo       | Descrição                           |
@@ -19,7 +19,7 @@
 ### Cria um Médico
 
 ```http
-  POST /api/medico
+  POST /medico
 ```
 
 |  Body  | Tipo       | Descrição                           |
@@ -53,7 +53,7 @@
 ### Busca todos os médicos - Apenas pacientes podem executar essa busca.
 
 ```http
-  GET /api/medicos
+  GET /medicos
 ```
 
 |  Header  | Tipo       | Descrição                           |

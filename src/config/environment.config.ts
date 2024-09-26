@@ -10,6 +10,7 @@ import * as pack from '../../package.json'
 const defaultRetry = { times: 3, delay: 5000 }
 
 const config = {
+  key: process.env.MAILGUN_API_KEY,
   env: process.env.NODE_ENV || 'development',
   appName: process.env.APP_NAME ? process.env.APP_NAME : 'tech-challenge',
   projectVersion: pack.version,

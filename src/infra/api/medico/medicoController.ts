@@ -5,7 +5,7 @@ import MedicoRepositoryAdapter from '../../adapter/medico/medicoRepositoryAdapte
 import { MedicoEntity } from '../../../core/domain/entities/medico';
 import { AppDataSource } from '../../data/database/data-source';
 import { AppDataSourceTest } from '../../data/database/data-source-teste';
-import MedicoManagerUseCase from '../../../core/applications/usecases/medico/medicoManagerUseCase';
+import MedicoManagerUseCase from '../../../core/applications/usecases/medico/medicoManagerUseCase.usecase';
 import UsuarioRepositoryAdapter from '../../adapter/usuario/usuarioRepositoryAdapter';
 import { UsuarioEntity } from '../../../core/domain/entities/usuario';
 
@@ -75,10 +75,10 @@ export default class MedicoController {
             if (data) {
               return h.response(data);
             }
-            return h.response({error: 'Medico já existe'}).code(400)
+            return h.response({error: 'Médico já cadastrado com esse CPF.'}).code(400)
         } catch (error) {
             Logger.error(`Error in POST /medicos: ${error.message}`);
-            return h.response({ error: 'Internal Server Error' }).code(500)
+            return h.response({ error: error.message }).code(400)
         }
     }
 
@@ -98,8 +98,8 @@ export default class MedicoController {
         request: Hapi.Request, h: Hapi.ResponseToolkit
     ): Promise<any> => {
         try {
-            const body = request.payload as { nome: string, email: string, cpf: string };
-            const data = await this.medicoManagerUseCase.atualizarMedico(body.cpf, body.nome, body.email)
+            const body = request.payload as { nome: string, cpf: string, crm: string };
+            const data = await this.medicoManagerUseCase.atualizarMedico(body.cpf, body.nome, body.crm)
             return h.response(data)
         } catch (error) {
             Logger.error(`Error in PUT /medico: ${error.message}`);

@@ -11,5 +11,14 @@ services:
             - "3306:3306"
         volumes:
             - db_data:/var/lib/mysql
+    mysqltest:
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: tech-challenge-fiap-test
+            MYSQL_USER: fiap-test
+            MYSQL_PASSWORD: password
+        ports:
+            - "3307:3306"
 volumes:
     db_data:

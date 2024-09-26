@@ -10,8 +10,6 @@ import { PerfilEnum } from '../../core/applications/models/usuario'
 
 
 const validate = async function (decoded, request, h) {
-  console.log(decoded);
-  console.log([PerfilEnum.PACIENTE, PerfilEnum.MEDICO].includes(decoded.perfil));
   if ([PerfilEnum.PACIENTE, PerfilEnum.MEDICO].includes(decoded.perfil)) {
     return { isValid: true, credentials: decoded };
   }

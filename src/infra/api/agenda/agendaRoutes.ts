@@ -15,11 +15,25 @@ export default class MedicoRoutes implements IRoute {
       server.route([
         {
           method: 'GET',
-          path: '/agenda/{medicoId}',
+          path: '/agenda/medico/{medicoId}',
           options: {
             handler: controller.buscarAgendasDeUmMedico,
             validate: validate.getById,
             description: 'Retorna os horários disponíveis de um médico',
+            tags: ['api', 'agenda'],
+            auth: {
+              strategy: 'jwt',
+              scope: [PerfilEnum.PACIENTE, PerfilEnum.MEDICO]
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/agenda/paciente/{pacienteId}',
+          options: {
+            handler: controller.buscarAgendasDeUmPaciente,
+            validate: validate.getByIdPaciente,
+            description: 'Retorna os horários agendados de um paciente.',
             tags: ['api', 'agenda'],
             auth: {
               strategy: 'jwt',

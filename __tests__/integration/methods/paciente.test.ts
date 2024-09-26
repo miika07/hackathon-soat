@@ -1,17 +1,16 @@
 import { route, TestRouteOptions } from '../../common';
 
 
-  it('[POST] Adicionar um medico - 200', async () => {
+  it('[POST] Adicionar um paciente - 200', async () => {
     const params: TestRouteOptions = {
       method: 'POST',
-      url: 'medico',
+      url: 'paciente',
       basePath: '',
       payload: {
         nome: 'Melina Garcia',
-        email: 'melina@test.com.br',
-        cpf: '304.206.345-23',
-        crm: '1234',
-        senha:"1234"
+        email: 'paciente@email.com.br',
+        cpf: '502.501.570-71',
+        senha: '1234'
       }
     };
     const { payload, statusCode } = await route(params);
@@ -19,29 +18,28 @@ import { route, TestRouteOptions } from '../../common';
     expect(payload.nome).toBe('Melina Garcia');
   });
 
-  it('[POST] Adicionar um medico com mesmo cpf - 400', async () => {
+  it('[POST] Adicionar um paciente com mesmo cpf - 400', async () => {
     const params: TestRouteOptions = {
       method: 'POST',
-      url: 'medico',
+      url: 'paciente',
       basePath: '',
       payload: {
         nome: 'Melina Garcia',
-        email: 'melina@test.com.br',
-        cpf: '304.206.345-23',
-        crm: '1234',
-        senha:"1234"
+        email: 'paciente@email.com.br',
+        cpf: '502.501.570-71',
+        senha: '1234'
       }
     };
     const { payload, statusCode } = await route(params);
     expect(statusCode).toBe(400);
-    expect(payload.error).toBe('Médico já cadastrado com esse CPF.');
+    expect(payload.error).toBe('Paciente já cadastrado com esse CPF.');
   });
 
 
-  it('[GET] Buscar todos os medicos - 200', async () => {
+  it('[GET] Buscar todos os pacientes - 200', async () => {
     const params: TestRouteOptions = {
       method: 'GET',
-      url: 'medico/all',
+      url: 'paciente/all',
       basePath: ''
     };
     
@@ -50,10 +48,10 @@ import { route, TestRouteOptions } from '../../common';
     expect(payload).toHaveLength(1);
   });
 
-  it('[GET] Buscar medico por ID - 200', async () => {
+  it('[GET] Buscar paciente por ID - 200', async () => {
     const params: TestRouteOptions = {
       method: 'GET',
-      url: 'medico/all',
+      url: 'paciente/all',
       basePath: ''
     };
     
@@ -62,7 +60,7 @@ import { route, TestRouteOptions } from '../../common';
 
     const paramsId: TestRouteOptions = {
       method: 'GET',
-      url: `medico/${response.payload[0].id}`,
+      url: `paciente/${response.payload[0].id}`,
       basePath: '',
       query: {
         id:response.payload.id
@@ -73,10 +71,10 @@ import { route, TestRouteOptions } from '../../common';
     expect(payload.nome).toBe('Melina Garcia');
   });
 
-  it('[GET] Buscar medico por ID inexistente - 404', async () => {
+  it('[GET] Buscar paciente por ID inexistente - 404', async () => {
     const paramsId: TestRouteOptions = {
       method: 'GET',
-      url: `medico/c4e53126-5a73-4ed0-b428-76950ed35b8c`,
+      url: `paciente/c4e53126-5a73-4ed0-b428-76950ed35b8c`,
       basePath: '',
     };
     const { payload, statusCode } = await route(paramsId);
@@ -84,10 +82,10 @@ import { route, TestRouteOptions } from '../../common';
     expect(payload.error).toBe('Not found');
   });
 
-  it('[GET] Buscar medico por CPF - 200', async () => {
+  it('[GET] Buscar paciente por CPF - 200', async () => {
     const params: TestRouteOptions = {
       method: 'GET',
-      url: 'medico/all',
+      url: 'paciente/all',
       basePath: ''
     };
     
@@ -96,19 +94,19 @@ import { route, TestRouteOptions } from '../../common';
 
     const paramsId: TestRouteOptions = {
       method: 'GET',
-      url: `medico/cpf/${response.payload[0].cpf}`,
+      url: `paciente/cpf/${response.payload[0].cpf}`,
       basePath: '',
     };
     const { payload, statusCode } = await route(paramsId);
     expect(statusCode).toBe(200);
     expect(payload.nome).toBe('Melina Garcia');
-    expect(payload.cpf).toBe('304.206.345-23');
+    expect(payload.cpf).toBe('502.501.570-71');
   });
 
-  it('[GET] Buscar medico por CPF inexistente - 404', async () => {
+  it('[GET] Buscar paciente por CPF inexistente - 404', async () => {
     const paramsId: TestRouteOptions = {
       method: 'GET',
-      url: `medico/cpf/305.234.211-34`,
+      url: `paciente/cpf/305.234.211-34`,
       basePath: '',
     };
     const { payload, statusCode } = await route(paramsId);
@@ -116,28 +114,28 @@ import { route, TestRouteOptions } from '../../common';
     expect(payload.error).toBe('Not found');
   });
 
-  it('[PUT] Atualizar medico - 200', async () => {
+  it('[PUT] Atualizar paciente - 200', async () => {
     const paramsId: TestRouteOptions = {
       method: 'PUT',
-      url: `medico`,
+      url: `paciente`,
       basePath: '',
       payload: {
-        nome: 'Melina Carniel',
-        crm: '1234567',
-        cpf: '304.206.345-23'
+        nome: 'Melina Carniel A',
+        email: 'paciente@mail.com',
+        cpf: '502.501.570-71'
       }
     };
     const { payload, statusCode } = await route(paramsId);
     expect(statusCode).toBe(200);
-    expect(payload.nome).toBe('Melina Carniel');
-    expect(payload.crm).toBe('1234567');
-    expect(payload.cpf).toBe('304.206.345-23');
+    expect(payload.nome).toBe('Melina Carniel A');
+    expect(payload.email).toBe('paciente@mail.com');
+    expect(payload.cpf).toBe('502.501.570-71');
   });
 
-  it('[DELETE] Deletar medico por ID - 204', async () => {
+  it('[DELETE] Deletar paciente por ID - 204', async () => {
     const params: TestRouteOptions = {
       method: 'GET',
-      url: 'medico/all',
+      url: 'paciente/all',
       basePath: ''
     };
     
@@ -146,7 +144,7 @@ import { route, TestRouteOptions } from '../../common';
 
     const paramsId: TestRouteOptions = {
       method: 'DELETE',
-      url: `medico/${response.payload[0].id}`,
+      url: `paciente/${response.payload[0].id}`,
       basePath: ''
     };
     const { statusCode } = await route(paramsId);

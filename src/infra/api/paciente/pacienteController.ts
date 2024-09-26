@@ -5,7 +5,7 @@ import PacienteRepositoryAdapter from '../../adapter/paciente/pacienteRepository
 import { PacienteEntity } from '../../../core/domain/entities/paciente';
 import { AppDataSource } from '../../data/database/data-source';
 import { AppDataSourceTest } from '../../data/database/data-source-teste';
-import PacienteManagerUseCase from '../../../core/applications/usecases/paciente/pacienteManagerUseCase';
+import PacienteManagerUseCase from '../../../core/applications/usecases/paciente/pacienteManagerUseCase.usecase';
 import UsuarioRepositoryAdapter from '../../adapter/usuario/usuarioRepositoryAdapter';
 import { UsuarioEntity } from '../../../core/domain/entities/usuario';
 
@@ -78,7 +78,7 @@ export default class PacienteController {
             return h.response({error: 'Paciente já existe'}).code(400)
         } catch (error) {
             Logger.error(`Error in POST /pacientes: ${error.message}`);
-            return h.response({ error: 'Internal Server Error' }).code(500)
+            return h.response({ error: error.message }).code(400)
         }
     }
 
@@ -100,7 +100,11 @@ export default class PacienteController {
         try {
             const body = request.payload as { nome: string, email: string, cpf: string };
             const data = await this.pacienteManagerUseCase.atualizarPaciente(body.cpf, body.nome, body.email)
-            return h.response(data)
+            if(data){
+                return h.response(data).code(200);
+            }
+
+            return h.response({ error: "Não foi possível atualizar o paciente." }).code(400)
         } catch (error) {
             Logger.error(`Error in PUT /paciente: ${error.message}`);
             return h.response({ error: 'Internal Server Error' }).code(500)

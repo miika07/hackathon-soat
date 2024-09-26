@@ -23,7 +23,7 @@ export default {
   updateMedico: {
     payload: Joi.object({
       nome: Joi.string().required(),
-      email: Joi.string().email().required(),
+      crm: Joi.string().required(),
       cpf: Joi.string().pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/).required()
     })
   }

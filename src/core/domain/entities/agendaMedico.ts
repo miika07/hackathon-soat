@@ -8,17 +8,17 @@ export class AgendaMedicoEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'date' })
+    @Column()
     data: string;
 
-    @Column({ type: 'time' })
+    @Column()
     horario: string;
 
-    @ManyToOne(() => MedicoEntity, medico => medico.agendas, { eager: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => MedicoEntity, medico => medico.agendas, { eager: true})
     @JoinColumn({ name: 'idMedico' })
     medico: MedicoEntity;
 
-    @ManyToOne(() => PacienteEntity, paciente => paciente.agendas, { eager: true, onDelete: 'CASCADE', nullable: true })
+    @ManyToOne(() => PacienteEntity, paciente => paciente.agendas, { eager: true, nullable: true })
     @JoinColumn({ name: 'idPaciente' })
     paciente: PacienteEntity | null;
     

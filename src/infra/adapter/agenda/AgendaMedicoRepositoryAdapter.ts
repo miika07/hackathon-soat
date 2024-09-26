@@ -22,6 +22,10 @@ export default class AgendaMedicoRepositoryAdapter implements AgendaMedicoReposi
         return await this.agendaRepository.find({where: {medico: {id: id}}});
     }
 
+    async buscarAgendasDeUmPaciente(id: string): Promise<AgendaMedicoEntity[]> {
+        return await this.agendaRepository.find({where: {paciente: {id: id}}});
+    }
+
     async buscarAgendaMedicoPorId(id: string): Promise<AgendaMedicoEntity | undefined> {
         return await this.agendaRepository.findOne({ where: { id: id } });
     }

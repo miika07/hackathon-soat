@@ -21,8 +21,7 @@ export default class MedicoRoutes implements IRoute {
             description: 'Busca todos os medicos',
             tags: ['api', 'medicos'],
             auth: {
-              strategy: 'jwt',
-              scope: [PerfilEnum.PACIENTE]
+              mode: "optional"
           }
 
           }

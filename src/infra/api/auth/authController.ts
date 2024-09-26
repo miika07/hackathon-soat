@@ -5,10 +5,10 @@ import MedicoRepositoryAdapter from '../../adapter/medico/medicoRepositoryAdapte
 import { MedicoEntity } from '../../../core/domain/entities/medico';
 import { AppDataSource } from '../../data/database/data-source';
 import { AppDataSourceTest } from '../../data/database/data-source-teste';
-import MedicoManagerUseCase from '../../../core/applications/usecases/medico/medicoManagerUseCase';
+import MedicoManagerUseCase from '../../../core/applications/usecases/medico/medicoManagerUseCase.usecase';
 import UsuarioRepositoryAdapter from '../../adapter/usuario/usuarioRepositoryAdapter';
 import { UsuarioEntity } from '../../../core/domain/entities/usuario';
-import AuthManagerUseCase from '../../../core/applications/usecases/auth/authManagerUseCase';
+import AuthManagerUseCase from '../../../core/applications/usecases/auth/authManagerUseCase.usecase';
 import { PacienteEntity } from '../../../core/domain/entities/paciente';
 import PacienteRepositoryAdapter from '../../adapter/paciente/pacienteRepositoryAdapter';
 

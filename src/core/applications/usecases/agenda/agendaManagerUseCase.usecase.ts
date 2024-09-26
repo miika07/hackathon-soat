@@ -10,8 +10,7 @@ import { parserMedico } from '../../adapters/medico';
 import { parserPaciente } from '../../adapters/paciente';
 import { parserAgendaMedico, parserAgendaMedicoDB, parserAgendasMedicos } from '../../adapters/agendaMedico';
 import AgendaMedicoRepositoryAdapter from '../../../../infra/adapter/agenda/AgendaMedicoRepositoryAdapter';
-import { MedicoEntity } from '../../../domain/entities/medico';
-import * as jwt from 'jsonwebtoken';
+import config from '../../../../config/environment.config';
 
 export default class AgendaManagerUseCase {
     private mailgun;
@@ -27,7 +26,7 @@ export default class AgendaManagerUseCase {
         agendaAdapter: AgendaMedicoRepositoryAdapter
     ) {
         this.mailgun = new Mailgun(formData);
-        this.mg = this.mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY || 'addf5f22a5e692f6dc30995cf156998b-1b5736a5-7fd3b4ce' });
+        this.mg = this.mailgun.client({ username: 'api', key: config.key });
         this.pacienteAdapter = pacienteAdapter;
         this.medicoAdapter = medicoAdapter;
         this.agendaAdapter = agendaAdapter;
@@ -36,6 +35,10 @@ export default class AgendaManagerUseCase {
     async pacienteAgendaConsulta(agendaId: string, pacienteId: string): Promise<AgendaMedico> {
         try {
             const agendaMedico: AgendaMedicoEntity = await this.agendaAdapter.buscarAgendaMedicoPorId(agendaId);
+
+            if (!pacienteId) {
+                throw new Error("Token não encontrado");
+            }
 
             if (!agendaMedico) {
                 throw new Error("Agenda não existe");
@@ -48,18 +51,18 @@ export default class AgendaManagerUseCase {
                 let medico = parserMedico(agendaMedico.medico);
                 let agenda = parserAgendaMedico(agendaMedico);
 
-                const response = await this.medicoAtualizaAgenda(agenda.id, agenda.data, agenda.horario, paciente.id);
+                const response = await this.medicoAtualizaAgenda(agenda.id, agenda.data, agenda.horario, medico.id, true, paciente.id);
 
                 this.enviarEmailAgendamento(medico, paciente, agenda);
 
                 return response;
+
             } else {
-                // throw new Error("Horário já ocupado.");
-                return null;
+                throw new Error("Horário já ocupado.");
             }
 
         } catch (error) {
-            throw new Error("Erro ao agendar consulta.");
+            throw new Error(error.message);
         }
     }
 
@@ -70,7 +73,21 @@ export default class AgendaManagerUseCase {
             if (!agendaMedico) {
                 return [];
             }
-            return parserAgendasMedicos(agendaMedico); 
+            return parserAgendasMedicos(agendaMedico);
+
+        } catch (error) {
+            throw new Error("Erro ao buscar agendas.");
+        }
+    }
+
+    async buscarAgendasDeUmPaciente(pacienteId: string): Promise<AgendaMedico[]> {
+        try {
+            const agendaMedico: AgendaMedicoEntity[] = await this.agendaAdapter.buscarAgendasDeUmPaciente(pacienteId);
+
+            if (!agendaMedico) {
+                return [];
+            }
+            return parserAgendasMedicos(agendaMedico);
 
         } catch (error) {
             throw new Error("Erro ao buscar agendas.");
@@ -84,7 +101,7 @@ export default class AgendaManagerUseCase {
                 throw new Error("Hora inválida.")
             }
 
-            if (this.validarDataFormato(data)) {
+            if (!this.validarDataFormato(data)) {
                 throw new Error("Data inválida.")
             }
 
@@ -109,12 +126,11 @@ export default class AgendaManagerUseCase {
             }
 
         } catch (error) {
-            console.log(error);
             throw new Error("Não foi possível cadastrar essa agenda.");
         }
     }
 
-    async medicoAtualizaAgenda(agendaId: string, data: string, horario: string, medicoId: string, pacienteId?: string): Promise<AgendaMedico> {
+    async medicoAtualizaAgenda(agendaId: string, data: string, horario: string, medicoId: string, pacienteAgendando: boolean, pacienteId?: string): Promise<AgendaMedico> {
 
         try {
 
@@ -122,12 +138,12 @@ export default class AgendaManagerUseCase {
                 throw new Error("Hora inválida.")
             }
 
-            if (this.validarDataFormato(data)) {
+            if (!this.validarDataFormato(data)) {
                 throw new Error("Data inválida.")
             }
 
             let agendaMedico: AgendaMedicoEntity = await this.agendaAdapter.buscarAgendaMedicoPorId(agendaId);
-            if (agendaMedico && agendaMedico.medico.id == medicoId) {
+            if (agendaMedico && (agendaMedico.medico.id == medicoId || pacienteAgendando)) {
                 const medicoId = agendaMedico.medico.id;
                 const agendaExiste = await this.agendaAdapter.buscarAgendaPorDataHoraIdMedico(data, horario, medicoId);
 
@@ -182,30 +198,6 @@ export default class AgendaManagerUseCase {
         }
     }
 
-    async enviarEmailTeste(): Promise<void> {
-
-        try {
-            const result = await this.mg.messages.create('sandbox60d9f86a189b47f48ec0f48c2c9dedcd.mailgun.org', {
-                from: "Health&Med <mailgun@sandbox60d9f86a189b47f48ec0f48c2c9dedcd.mailgun.org>",
-                to: ["milksgc@gmail.com"],
-                subject: "Health&Med - Nova consulta agendada",
-                html:
-                    `<html>
-                        <body>
-                            <p>Olá, Dr(a). <strong>Medico</strong></p>
-                            <p>Você tem uma nova consulta marcada!</p>
-                            <p><strong>Paciente:</strong> Paciente</p>
-                            <p><strong>Data e horário:</strong> 10/10/2024 à 00:00</p>
-                        </body>
-                    </html>`
-            })
-                .then(msg => console.log(msg))
-                .catch(err => console.log(err));
-
-        } catch {
-            throw new Error("Erro ao enviar email.");
-        }
-    }
 
     validarDataFormato(data: string): boolean {
         const regex = /^\d{2}\/\d{2}\/\d{4}$/;

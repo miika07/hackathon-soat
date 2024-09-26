@@ -8,9 +8,9 @@ import * as jwt from 'jsonwebtoken';
 
 export default class AuthManagerUseCase {
 
-    private userAdapter;
-    private pacienteAdapter;
-    private medicoAdapter;
+    private userAdapter: UsuarioRepositoryAdapter;
+    private pacienteAdapter: PacienteRepositoryAdapter;
+    private medicoAdapter: MedicoRepositoryAdapter;
     private jwtSecret: string;
 
     constructor(userAdapter: UsuarioRepositoryAdapter, pacienteAdapter: PacienteRepositoryAdapter, medicoAdapter: MedicoRepositoryAdapter) {
@@ -38,7 +38,7 @@ export default class AuthManagerUseCase {
             if (usuario.perfil == PerfilEnum.PACIENTE) {
                 idPerfil = await this.pacienteAdapter.buscarPacientePoUsuarioId(usuario);
             } else if (usuario.perfil == PerfilEnum.MEDICO) {
-                idPerfil = await this.medicoAdapter.buscarMedicoPorUsuarioId(usuario);
+                idPerfil = await this.medicoAdapter.buscarMedicoPoUsuarioId(usuario);
             }else {
                 throw new Error("Perfil não existe.");
             }
@@ -47,7 +47,8 @@ export default class AuthManagerUseCase {
             const token = jwt.sign(payload, this.jwtSecret, { expiresIn: '4h' });
 
             return { token };
-        } catch {
+
+        } catch (error){
             throw new Error("Credenciais inválidas");
         }
     }

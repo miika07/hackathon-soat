@@ -58,10 +58,12 @@ export default class PacienteManagerUseCase {
         return response ? parserPaciente(response) : response;
     }
 
-    async atualizarPaciente(cpf: string, nome: string, crm: string): Promise<Paciente | undefined> {
+    async atualizarPaciente(cpf: string, nome: string, email: string): Promise<Paciente | undefined> {
         const paciente: PacienteEntity = await this.adapter.buscarPacientePorCPF(cpf);
         if (paciente) {
             paciente.nome = nome;
+            paciente.usuario.email = email;
+            paciente.cpf = cpf;
             const response = await this.adapter.atualizarPaciente(paciente);
             return parserPaciente(response);
         }

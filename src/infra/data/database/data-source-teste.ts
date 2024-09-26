@@ -7,7 +7,7 @@ export const AppDataSourceTest = new DataSource({
     username: "fiap-test",
     password: "password",
     database: "tech-challenge-fiap-test",
-    logging: true,
+    logging: false,
     entities: ["src/core/domain/entities/*.ts"],
     migrations: ["src/infra/data/database/migrations/*.ts"],
     synchronize: true,
