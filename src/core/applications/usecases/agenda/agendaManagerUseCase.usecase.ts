@@ -1,8 +1,6 @@
-import formData from 'form-data';
-import Mailgun from 'mailgun.js';
 import { Medico } from "../../models/medico";
 import { Paciente } from "../../models/paciente";
-import { AgendaMedico, HoraEnum, horariosDeAgenda } from '../../models/agendaMedico';
+import { AgendaMedico, horariosDeAgenda } from '../../models/agendaMedico';
 import { AgendaMedicoEntity } from '../../../domain/entities/agendaMedico';
 import MedicoRepositoryAdapter from '../../../../infra/adapter/medico/medicoRepositoryAdapter';
 import PacienteRepositoryAdapter from '../../../../infra/adapter/paciente/pacienteRepositoryAdapter';
@@ -11,23 +9,19 @@ import { parserPaciente } from '../../adapters/paciente';
 import { parserAgendaMedico, parserAgendaMedicoDB, parserAgendasMedicos } from '../../adapters/agendaMedico';
 import AgendaMedicoRepositoryAdapter from '../../../../infra/adapter/agenda/AgendaMedicoRepositoryAdapter';
 import config from '../../../../config/environment.config';
+import nodemailer from 'nodemailer';
 
 export default class AgendaManagerUseCase {
-    private mailgun;
-    private mg;
+
     private pacienteAdapter: PacienteRepositoryAdapter;
     private medicoAdapter: MedicoRepositoryAdapter;
     private agendaAdapter: AgendaMedicoRepositoryAdapter;
-    private jwtSecret;
 
     constructor(
         pacienteAdapter: PacienteRepositoryAdapter,
         medicoAdapter: MedicoRepositoryAdapter,
         agendaAdapter: AgendaMedicoRepositoryAdapter
     ) {
-        this.mailgun = new Mailgun(formData);
-
-        // this.mg = this.mailgun.client({ username: 'api', key: config.key });
         this.pacienteAdapter = pacienteAdapter;
         this.medicoAdapter = medicoAdapter;
         this.agendaAdapter = agendaAdapter;
@@ -54,7 +48,7 @@ export default class AgendaManagerUseCase {
 
                 const response = await this.medicoAtualizaAgenda(agenda.id, agenda.data, agenda.horario, medico.id, true, paciente.id);
 
-                // this.enviarEmailAgendamento(medico, paciente, agenda);
+                this.enviarEmailAgendamento(medico, paciente, agenda);
 
                 return response;
 
@@ -173,14 +167,29 @@ export default class AgendaManagerUseCase {
     }
 
     async enviarEmailAgendamento(medico: Medico, paciente: Paciente, agenda: AgendaMedico): Promise<void> {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.zoho.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: config.emailConfig.email,
+                pass: config.emailConfig.password
+            },
+        });
 
         try {
-            const result = await this.mg.messages.create('sandbox60d9f86a189b47f48ec0f48c2c9dedcd.mailgun.org', {
-                from: "Health&Med <mailgun@sandbox60d9f86a189b47f48ec0f48c2c9dedcd.mailgun.org>",
-                to: [medico.email],
-                subject: "Health&Med - Nova consulta agendada",
-                html:
-                    `<html>
+            await transporter.verify();
+            console.log('Transporte pronto para enviar e-mails.');
+        } catch (error) {
+            console.error('Erro ao verificar transporte:', error);
+            throw new Error('Erro ao verificar o transporte.');
+        }
+
+        const mailOptions = {
+            from: config.emailConfig.email,
+            to: medico.email,
+            subject: "Health&Med - Nova consulta agendada",
+            html: `<html>
                         <body>
                             <p>Olá, Dr(a). <strong>${medico.nome}</strong></p>
                             <p>Você tem uma nova consulta marcada!</p>
@@ -188,14 +197,16 @@ export default class AgendaManagerUseCase {
                             <p><strong>Data e horário:</strong> ${agenda.data} à ${agenda.horario}</p>
                             
                         </body>
-                    </html>`
-            })
-                .then(msg => console.log(msg))
-                .catch(err => console.log(err));
+                    </html>`,
+        };
 
+        // Enviar o e-mail
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('E-mail enviado:', info.response);
         } catch (error) {
-            console.log(error);
-            throw new Error("Erro ao enviar email.");
+            console.error('Erro ao enviar e-mail:', error);
+            throw new Error('Erro ao enviar e-mail.');
         }
     }
 
