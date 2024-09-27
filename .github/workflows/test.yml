@@ -10,7 +10,7 @@ jobs:
     
         services:
             mysql:
-                image: mysql:5.7
+                image: mysql:5.7-alpine
                 env:
                     MYSQL_ROOT_PASSWORD: root
                     MYSQL_DATABASE: tech-challenge-fiap-test
@@ -18,7 +18,7 @@ jobs:
                     MYSQL_PASSWORD: password
                 ports:
                     - 3307:3306
-                options: --health-cmd="mysqladmin pint --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+                options: --health-cmd="mysqladmin pint --silent" --health-interval=10s --health-timeout=5s --health-retries=10
         steps:
             -   uses: actions/checkout@v3
                 with:
