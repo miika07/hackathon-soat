@@ -20,14 +20,31 @@ jobs:
                     - 3307:3306
                 options: --healh-cmd="mysqladmin pint --silent" --health-interval=10s --health-timeout=5s --health-retries=3
         steps:
-            -   name: Checkout Repository
-                uses: actions/checkout@v2
-            
+            -   uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
+
             -   name: Set up Node.js
-                uses: actions/setups-node@v2
+                uses: actions/setup-node@v2
                 with:
                     node-version: '18'
             
             -   name: Install dependencies
                 run: npm install
+            
+            -   name: Wait for MySQL to be ready
+                run: |
+                    until mysqladmin ping -h"127.0.0.1" --silent; do
+                        echo "Waiting for MySQL...";
+                        sleep 5;
+                    done
+
+            -   name: Run tests
+                env:
+                    DB_HOST: 127.0.0.1
+                    DB_PORT: 3307
+                    DB_USER: fiap-test
+                    DB_PASSWORD: password
+                    DB_NAME: tech-challenge-fiap-test
+                run: npm test
                     
