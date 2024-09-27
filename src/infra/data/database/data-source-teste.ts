@@ -11,7 +11,7 @@ export const AppDataSourceTest = new DataSource({
     entities: ["src/core/domain/entities/*.ts"],
     migrations: ["src/infra/data/database/migrations/*.ts"],
     synchronize: true,
-    dropSchema: true 
+    dropSchema: true
 })
 
   
