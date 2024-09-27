@@ -32,7 +32,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Adiciona contexto do cluster
-        run: aws eks --region us-east-1 update-kubeconfig --name cluster-tech
+        run: aws eks --region us-east-1 update-kubeconfig --name tech-challenge-eks
 
       - name: Cria service
         run: kubectl apply -f infra/api-service.yaml --validate=false
