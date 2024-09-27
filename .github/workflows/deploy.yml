@@ -45,11 +45,11 @@ jobs:
             replicas: 1
             selector:
               matchLabels:
-                app: node-app-deployment
+                app: node-app
             template:
               metadata:
                 labels:
-                  app: node-app-deployment
+                  app: node-app
               spec:
                 containers:
                 - name: node-app
