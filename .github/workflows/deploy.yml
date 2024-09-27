@@ -1,32 +1,26 @@
-# name: Build
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     types: [opened, synchronize, reopened]
-# jobs:
-#   sonarcloud:
-#     name: SonarCloud
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#         with:
-#           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: '18'
-          
-#       - name: Run npm install 
-#         run: npm install
+name: Terraform Workflow
 
-#       - name: Run tests and generate coverage
-#         run: |
-#           npm run coverage:check
+on:
+  push:
+    branches:
+      - main
 
-#       - name: SonarCloud Scan
-#         uses: SonarSource/sonarcloud-github-action@master
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Login Docker
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Subindo imagem Docker
+        run: |
+          docker build -t ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPO }}:latest . --no-cache
+          docker push ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPO }}:latest
+      
