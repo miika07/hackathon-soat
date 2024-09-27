@@ -34,8 +34,27 @@ jobs:
       - name: Adiciona contexto do cluster
         run: aws eks --region us-east-1 update-kubeconfig --name tech-challenge-eks
 
+      - name: Cria deployment com variáveis de ambiente
+        run: |
+          kubectl create deployment my-app --image=${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPO }}:latest --dry-run=client -o yaml > infra/api-deployment.yaml
+          echo "
+          env:
+            - name: DB_TEST_HOST
+              value: '${{ secrets.DB_TEST_HOST }}'
+            - name: DB_TEST_USER
+              value: '${{ secrets.DB_TEST_USER }}'
+            - name: DB_TEST_PASSWORD
+              value: '${{ secrets.DB_TEST_PASSWORD }}'
+            - name: DB_TEST_NAME
+              value: '${{ secrets.DB_TEST_NAME }}'
+            - name: DB_NAME
+              value: '${{ secrets.DB_NAME }}'
+            - name: EMAIL
+              value: '${{ secrets.EMAIL }}'
+            - name: EMAIL_PASSWORD
+              value: '${{ secrets.EMAIL_PASSWORD }}'
+          " >> infra/api-deployment.yaml
+          kubectl apply -f infra/api-deployment.yaml
+
       - name: Cria service
         run: kubectl apply -f infra/api-service.yaml --validate=false
-
-      - name: Cria deployment
-        run: kubectl apply -f infra/api-deployment.yaml --validate=false
