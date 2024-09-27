@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
     username: config.dbTest.user,
     password: config.dbTest.password,
     database: config.dbTest.dbName,
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: ["./src/core/domain/entities/*.ts"],
     subscribers: [],
