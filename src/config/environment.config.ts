@@ -23,7 +23,8 @@ const config = {
     host: process.env.DB_TEST_HOST || 'localhost' ,
     user: process.env.DB_TEST_USER || 'fiap-test' ,
     password: process.env.DB_TEST_PASSWORD || 'password' ,
-    name: process.env.DB_TEST_NAME || 'tech-challenge-fiap-test'
+    name: process.env.DB_TEST_NAME || 'tech-challenge-fiap-test',
+    dbName: process.env.DB_NAME || 'tech-challenge-fiap'
   },
   plugins: {
     swagger: {
