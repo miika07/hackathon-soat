@@ -22,6 +22,7 @@
 import { DataSource } from "typeorm";
 import config from "../../../config/environment.config";
 
+console.log(config.dbTest.user);
 export const AppDataSourceTest = new DataSource({
     type: "mysql",
     host: config.dbTest.host,
