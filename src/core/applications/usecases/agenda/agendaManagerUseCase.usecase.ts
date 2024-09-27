@@ -26,7 +26,8 @@ export default class AgendaManagerUseCase {
         agendaAdapter: AgendaMedicoRepositoryAdapter
     ) {
         this.mailgun = new Mailgun(formData);
-        this.mg = this.mailgun.client({ username: 'api', key: config.key });
+
+        // this.mg = this.mailgun.client({ username: 'api', key: config.key });
         this.pacienteAdapter = pacienteAdapter;
         this.medicoAdapter = medicoAdapter;
         this.agendaAdapter = agendaAdapter;
@@ -53,7 +54,7 @@ export default class AgendaManagerUseCase {
 
                 const response = await this.medicoAtualizaAgenda(agenda.id, agenda.data, agenda.horario, medico.id, true, paciente.id);
 
-                this.enviarEmailAgendamento(medico, paciente, agenda);
+                // this.enviarEmailAgendamento(medico, paciente, agenda);
 
                 return response;
 
