@@ -10,6 +10,10 @@ import * as pack from '../../package.json'
 const defaultRetry = { times: 3, delay: 5000 }
 
 const config = {
+  emailConfig: {
+    email: process.env.EMAIL,
+    password: process.env.EMAIL_PASSWORD
+  },
   key: process.env.MAILGUN_API_KEY,
   env: process.env.NODE_ENV || 'development',
   appName: process.env.APP_NAME ? process.env.APP_NAME : 'tech-challenge',
@@ -24,6 +28,13 @@ const config = {
     user: process.env.DB_TEST_USER || 'fiap-test' ,
     password: process.env.DB_TEST_PASSWORD || 'password' ,
     name: process.env.DB_TEST_NAME || 'tech-challenge-fiap-test',
+    dbName: process.env.DB_NAME || 'tech-challenge-fiap'
+  },
+  db: {
+    host: process.env.DB_TEST_HOST || 'localhost' ,
+    user: process.env.DB_TEST_USER || 'fiap' ,
+    password: process.env.DB_TEST_PASSWORD || 'password' ,
+    name: process.env.DB_TEST_NAME || 'tech-challenge-fiap',
     dbName: process.env.DB_NAME || 'tech-challenge-fiap'
   },
   plugins: {
