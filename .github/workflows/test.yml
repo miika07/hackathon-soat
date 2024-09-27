@@ -1,0 +1,33 @@
+name: Pipeline de testes
+
+on:
+    pull_request:
+        branches:
+            - main
+jobs:
+    test:
+        runs-on: ubuntu-latest
+    
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: tech-challenge-fiap-test
+                    MYSQL_USER: fiap-test
+                    MYSQL_PASSWORD: password
+                ports:
+                    - 3307:3306
+                options: --healh-cmd="mysqladmin pint --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v2
+            
+            -   name: Set up Node.js
+                uses: actions/setups-node@v2
+                with:
+                    node-version: '18'
+            
+            -   name: Install dependencies
+                run: npm install
+                    
